@@ -22,4 +22,8 @@ class Welcome extends CI_Controller {
 	{
 		$this->load->view('ind');
 	}
+	public function homey()
+	{
+		$this->load->view('home');
+	}
 }
