@@ -7,7 +7,6 @@
 	<head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Magazine &mdash; Free Fully Responsive HTML5 Bootstrap Template by FREEHTML5.co</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
 	<!-- Google Fonts -->
@@ -20,6 +19,12 @@
 	<link rel="stylesheet" href="<?php echo base_url('./assets/css/bootstrap.css'); ?>">
 
 	<link rel="stylesheet" href="<?php echo base_url('./assets/css/style.css'); ?>">
+	<style type="text/css">
+		.fh5co-post-entry article .content-article a{
+			text-decoration: none;
+			color: #000;
+		}
+	</style>
 
 	<script src="<?php echo base_url('./assets/js/modernizr-2.6.2.min.js'); ?>"></script>
 
@@ -108,6 +113,13 @@
 							<div class="fh5co-highlight right">
 								<h4>Remember</h4>
 								<p>Jangan Lupa untuk selalu hidup Sehat ya!</p>
+							</div>
+						</div>
+						<div class="col-lg-4 animate-box">
+							<div class="fh5co-highlight right">
+								<h4>Action</h4>
+								<button class="btn btn-primary"><a href="<?php echo base_url()."crud/edit_data/".$data['id']; ?>">Edit</a></button>
+								<button class="btn btn-warning"><a href="<?php echo base_url()."crud/do_delete/".$data['id']; ?>">Delete</a></button>
 							</div>
 						</div>
 					</div>

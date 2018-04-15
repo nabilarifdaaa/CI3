@@ -71,33 +71,70 @@ class Crud extends CI_Controller {
 			}
         }
 	}
-	
-	public function upload(){
-	 	$this->load->view('upload_form', array('error' => ' ' ));
+
+	public function edit_data($id='',$img=''){
+		$this->load->model('mymodel');
+		$artikel = $this->mymodel->getedit($id);
+		$data = array(
+			"id" 		=> $artikel[0]['id'],
+			"judul" 	=> $artikel[0]['judul'],
+			"tgl"		=> $artikel[0]['tgl'],
+			"author"	=> $artikel[0]['author'],
+			"isi" 		=> $artikel[0]['isi'],
+			"img"		=> $artikel[0]['img']
+		);
+		$this->load->view('form_edit',$data);
 	}
 
-	public function do_upload()
+	public function do_update(){
+		$config['upload_path']          = 'images/uploaded/';
+        $config['allowed_types']        = 'gif|jpg|png';
+        $config['max_size']             = 1000;
+        $config['max_width']            = 1024;
+        $config['max_height']           = 768;
+
+        $this->load->library('upload', $config);
+
+        if ( ! $this->upload->do_upload('userfile'))
         {
-                $config['upload_path']          = 'images/uploaded/';
-                $config['allowed_types']        = 'gif|jpg|png';
-                $config['max_size']             = 100;
-                $config['max_width']            = 1024;
-                $config['max_height']           = 768;
+                $error = array('error' => $this->upload->display_errors());
 
-                $this->load->library('upload', $config);
-
-                if ( ! $this->upload->do_upload('userfile'))
-                {
-                        $error = array('error' => $this->upload->display_errors());
-
-                        $this->load->view('upload_form', $error);
-                }
-                else
-                {
-                        $data = array('upload_data' => $this->upload->data());
-
-                        $this->load->view('sukses', $data);
-                }
+               print_r($error);
         }
-	
+        else
+        {
+			$result_upload=$this->upload->data();
+				
+			$id 			= $_POST['id'];
+			$judul 			= $_POST['judul'];
+			$tgl			= date("Y-m-d H:i:s");
+			$author 		= $_POST['author'];
+			$isi			= $_POST['isi'];
+			$img			= $result_upload['file_name']; 
+			$data_update 	= array(
+				'judul' 		=> $judul,
+				'tgl' 			=> $tgl,
+				'author' 		=> $author,
+				'isi' 			=> $isi,
+				'img'			=> $img);
+			$this->load->model('mymodel');
+			$where = array('id' => $id);
+			$res = $this->mymodel->UpdateData('artikel',$data_update,$where);
+			if($res>=1){
+				$this->session->set_flashdata('pesan','Update Data Sukses');
+				redirect('crud/');
+			}
+		}
+	}
+
+	public function do_delete($id){
+		$this->load->model('mymodel');
+		$where 	= array('id' => $id);
+		$res 	= $this->mymodel->DeleteData('artikel',$where);
+		if($res>=1){
+			$this->session->set_flashdata('pesan','Delete Data Sukses');
+			redirect('crud/');
+			}
+	}
 }
+
