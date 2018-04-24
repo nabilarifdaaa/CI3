@@ -21,25 +21,26 @@
         <div class="row">
           <div class="col-lg-6">
             <div class="bs-component">
+              <?php echo validation_errors(); ?>
               <?php echo form_open_multipart('crud/do_update', 'id="id"')?>
               <form>
                 <fieldset>
                   <input type="hidden" name="id" value="<?php echo $id; ?>">
                   <div class="form-group">
                     <label for="judul">Judul</label>
-                    <input type="text" class="form-control" id="judul" name="judul" value="<?php echo $judul; ?>">
+                    <input type="text" class="form-control" id="judul" name="judul" value="<?php echo set_value('judul', $judul) ; ?>">
                   </div>
                   <div class="form-group">
                     <label for="tgl">Tanggal</label>
-                    <input type="date" class="form-control" id="tgl" name="tgl" placeholder="<?php echo $tgl; ?>">
+                    <input type="date" class="form-control" id="tgl" name="tgl" placeholder="<?php echo set_value('tgl', $tgl); ?>">
                   </div>
                   <div class="form-group">
                     <label for="author">Author</label>
-                    <input type="text" class="form-control" id="author" name="author" value="<?php echo $author; ?>">
+                    <input type="text" class="form-control" id="author" name="author" value="<?php echo set_value('author',$author); ?>">
                   </div>
                   <div class="form-group">
                     <label for="isi">Isi Artikel</label>
-                    <textarea class="form-control" id="isi" name="isi" rows="3"><?php echo $isi; ?></textarea>
+                    <textarea class="form-control" id="isi" name="isi" rows="3"><?php echo set_value('isi',$isi); ?></textarea>
                   </div>
                   <div class="form-group">
                     <label for="img">Upload Gambar</label>
@@ -57,5 +58,6 @@
 
     <script src="<?php echo base_url('./assets/js/jquery.min.js'); ?>"></script>
     <script src="<?php echo base_url('./assets/js/bootstrap.min.js'); ?>"></script>
+    <script src="<?php echo base_url() ?>assets/js/custom.js"></script>
   </body>
 </html>

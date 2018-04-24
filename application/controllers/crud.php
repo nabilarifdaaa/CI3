@@ -16,10 +16,7 @@ class Crud extends CI_Controller {
 		$this->load->model('mymodel');
 
 		$data['isi'] = $this->mymodel->GetPreview($id);
-		 
-		// echo "<pre>";
-		// print_r($data);die();
-
+		
 		$this->load->view('preview', $data);
 	}
 
@@ -28,6 +25,32 @@ class Crud extends CI_Controller {
 	}
 
 	public function do_insert(){
+		//VALIDATION
+		$this->load->helper('form');
+		$this->load->library('form_validation');
+
+		$this->form_validation->set_rules('judul', 'Judul', 'required|is_unique[artikel.judul]',
+   			array(
+		       'required'      => 'Judul Kosong, silahkan isi terlebih dahulu',
+		       'is_unique'     => 'Judul ' .$this->input->post('judul'). ' sudah ada bosque.'
+		  	));
+
+		$this->form_validation->set_rules('author', 'Author', 'required',
+   			array(
+		       'required'      => 'Author Kosong, silahkan isi terlebih dahulu'
+		 	));
+
+		$this->form_validation->set_rules('isi', 'Isi', 'required',
+   			array(
+		       'required'      => 'Isi Kosong, silahkan isi terlebih dahulu'
+		 	));
+
+		 if ($this->form_validation->run() === FALSE)
+	    {
+	        $this->load->view('form_add');
+
+	    } else {
+
 		$config['upload_path']          = 'images/uploaded/';
         $config['allowed_types']        = 'gif|jpg|png';
         $config['max_size']             = 1000;
@@ -36,40 +59,41 @@ class Crud extends CI_Controller {
 
         $this->load->library('upload', $config);
 
-        if ( ! $this->upload->do_upload('userfile'))
-        {
-                $error = array('error' => $this->upload->display_errors());
+	        if ( ! $this->upload->do_upload('userfile'))
+	        {
+	                $error = array('error' => $this->upload->display_errors());
 
-               print_r($error);
-        }
-        else
-        {
-            $data = array('upload_data' => $this->upload->data());
+	               print_r($error);
+	        }
+	        else
+	        {
+	            $data = array('upload_data' => $this->upload->data());
 
-            $judul 			= $_POST['judul'];
-			$tgl			= date("Y-m-d H:i:s");
-			$author 		= $_POST['author'];
-			$isi			= $_POST['isi'];
-			$img			= $this->upload->data('file_name');
-			
-			$data_insert	= array(
-									'judul' 	=> $judul,
-									'tgl'		=> $tgl,
-									'author'	=> $author,
-									'isi' 		=> $isi,
-									'img'		=> $img
-								);
+	            $judul 			= $_POST['judul'];
+				$tgl			= date("Y-m-d H:i:s");
+				$author 		= $_POST['author'];
+				$isi			= $_POST['isi'];
+				$img			= $this->upload->data('file_name');
+				
+				$data_insert	= array(
+										'judul' 	=> $judul,
+										'tgl'		=> $tgl,
+										'author'	=> $author,
+										'isi' 		=> $isi,
+										'img'		=> $img
+									);
 
-			$this->load->model('mymodel');
-			$res = $this->mymodel->InsertData('artikel', $data_insert);
-			
-			if($res>=1){
-				$this->session->set_flashdata('pesan','Tambah Data Sukses');
-				redirect('crud/index');
-			}else{
-				echo "<h2>Insert Data Gagal</h2>";	
-			}
-        }
+				$this->load->model('mymodel');
+				$res = $this->mymodel->InsertData('artikel', $data_insert);
+				
+				if($res>=1){
+					$this->session->set_flashdata('pesan','Tambah Data Sukses');
+					redirect('crud/index');
+				}else{
+					echo "<h2>Insert Data Gagal</h2>";	
+				}
+	         }
+	    }
 	}
 
 	public function edit_data($id='',$img=''){
@@ -87,6 +111,31 @@ class Crud extends CI_Controller {
 	}
 
 	public function do_update(){
+		$this->load->helper('form');
+		$this->load->library('form_validation');
+
+		$this->form_validation->set_rules('judul', 'Judul', 'required|is_unique[artikel.judul]',
+   			array(
+		       'required'      => 'Judul Kosong, silahkan isi terlebih dahulu',
+		       'is_unique'     => 'Judul ' .$this->input->post('judul'). ' sudah ada bosque.'
+		  	));
+
+		$this->form_validation->set_rules('author', 'Author', 'required',
+   			array(
+		       'required'      => 'Author Kosong, silahkan isi terlebih dahulu'
+		 	));
+
+		$this->form_validation->set_rules('isi', 'Isi', 'required',
+   			array(
+		       'required'      => 'Isi Kosong, silahkan isi terlebih dahulu'
+		 	));
+
+		 if ($this->form_validation->run() === FALSE)
+	    {
+	        $this->load->view('form_add');
+
+	    } else {
+
 		$config['upload_path']          = 'images/uploaded/';
         $config['allowed_types']        = 'gif|jpg|png';
         $config['max_size']             = 1000;
@@ -95,34 +144,35 @@ class Crud extends CI_Controller {
 
         $this->load->library('upload', $config);
 
-        if ( ! $this->upload->do_upload('userfile'))
-        {
-                $error = array('error' => $this->upload->display_errors());
+	        if ( ! $this->upload->do_upload('userfile'))
+	        {
+	                $error = array('error' => $this->upload->display_errors());
 
-               print_r($error);
-        }
-        else
-        {
-			$result_upload=$this->upload->data();
-				
-			$id 			= $_POST['id'];
-			$judul 			= $_POST['judul'];
-			$tgl			= date("Y-m-d H:i:s");
-			$author 		= $_POST['author'];
-			$isi			= $_POST['isi'];
-			$img			= $result_upload['file_name']; 
-			$data_update 	= array(
-				'judul' 		=> $judul,
-				'tgl' 			=> $tgl,
-				'author' 		=> $author,
-				'isi' 			=> $isi,
-				'img'			=> $img);
-			$this->load->model('mymodel');
-			$where = array('id' => $id);
-			$res = $this->mymodel->UpdateData('artikel',$data_update,$where);
-			if($res>=1){
-				$this->session->set_flashdata('pesan','Update Data Sukses');
-				redirect('crud/');
+	               print_r($error);
+	        }
+	        else
+	        {
+				$result_upload=$this->upload->data();
+					
+				$id 			= $_POST['id'];
+				$judul 			= $_POST['judul'];
+				$tgl			= date("Y-m-d H:i:s");
+				$author 		= $_POST['author'];
+				$isi			= $_POST['isi'];
+				$img			= $result_upload['file_name']; 
+				$data_update 	= array(
+					'judul' 		=> $judul,
+					'tgl' 			=> $tgl,
+					'author' 		=> $author,
+					'isi' 			=> $isi,
+					'img'			=> $img);
+				$this->load->model('mymodel');
+				$where = array('id' => $id);
+				$res = $this->mymodel->UpdateData('artikel',$data_update,$where);
+				if($res>=1){
+					$this->session->set_flashdata('pesan','Update Data Sukses');
+					redirect('crud/');
+				}
 			}
 		}
 	}

@@ -36,24 +36,32 @@
         <div class="row">
           <div class="col-lg-6">
             <div class="bs-component">
-              <?php echo form_open_multipart('crud/do_insert')?>
+              <?php echo validation_errors(); ?>
+              <?php echo form_open_multipart('crud/do_insert', array(
+                'class' => 'needs-validation','novalidate' => '') 
+                );
+              ?>
               <form>
                 <fieldset>
                   <div class="form-group">
                     <label for="judul">Judul</label>
-                    <input type="text" class="form-control" id="judul" name="judul" placeholder="Judul">
+                    <input type="text" class="form-control" id="judul" name="judul" placeholder="Judul" value="<?php echo set_value('judul')?>" required>
+                    <div class="invalid-feedback">Judulnya kosong isi dong</div>
                   </div>
                   <div class="form-group">
                     <label for="tgl">Tanggal</label>
-                    <input type="date" class="form-control" id="tgl" name="tgl" placeholder="Judul">
+                    <input type="date" class="form-control" id="tgl" name="tgl" placeholder="Judul" value="<?php echo set_value('tanggal')?>" required>
+                    <div class="invalid-feedback">Tanggalnya kosong isi dong</div>
                   </div>
                   <div class="form-group">
                     <label for="author">Author</label>
-                    <input type="text" class="form-control" id="author" name="author" aria-describedby="emailHelp" placeholder="Author">
+                    <input type="text" class="form-control" id="author" name="author" aria-describedby="emailHelp" placeholder="Author" value="<?php echo set_value('author')?>" required>
+                    <div class="invalid-feedback">Authornya kosong isi dong</div>
                   </div>
                   <div class="form-group">
                     <label for="isi">Isi Artikel</label>
-                    <textarea class="form-control" id="isi" name="isi" rows="3"></textarea>
+                    <textarea class="form-control" id="isi" name="isi" rows="3" required><?php echo set_value('isi') ?></textarea>
+                    <div class="invalid-feedback">Isi kontennya dong</div>
                   </div>
                   <div class="form-group">
                     <label for="img">Upload Gambar</label>
@@ -71,5 +79,6 @@
 
     <script src="<?php echo base_url('./assets/js/jquery.min.js'); ?>"></script>
     <script src="<?php echo base_url('./assets/js/bootstrap.min.js'); ?>"></script>
+    <script src="<?php echo base_url() ?>assets/js/custom.js"></script>
   </body>
 </html>
