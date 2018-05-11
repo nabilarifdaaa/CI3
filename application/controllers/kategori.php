@@ -17,24 +17,54 @@ class Kategori extends CI_Controller {
 	}
 
 	public function do_insert(){
-        $namaKategori 	= $_POST['namaKategori'];
-		$keterangan		= $_POST['keterangan'];
-		$tanggalBuat 	= date("Y-m-d H:i:s");
-		
-		$data_insert	= array(
-								'namaKategori' 	=> $namaKategori,
-								'keterangan'	=> $keterangan,
-								'tanggalBuat'	=> $tanggalBuat
-							);
-		
-		$this->load->model('kategoriModel');
-		$res = $this->kategoriModel->InsertData('kategori', $data_insert);
-		
-		if($res>=1){
-			$this->session->set_flashdata('pesan','Tambah Data Sukses');
-			redirect('kategori/preview');
-		}else{
-			echo "<h2>Insert Data Gagal</h2>";	
+		$this->load->helper('form');
+		$this->load->library('form_validation');
+
+		$this->form_validation->set_rules('judul', 'Judul', 'required|is_unique[artikel.judul]',
+   			array(
+		       'required'      => 'Judul Kosong, silahkan isi terlebih dahulu',
+		       'is_unique'     => 'Judul ' .$this->input->post('judul'). ' sudah ada bosque.'
+		  	));
+
+		$this->form_validation->set_rules('author', 'Author', 'required',
+   			array(
+		       'required'      => 'Author Kosong, silahkan isi terlebih dahulu'
+		 	));
+
+		$this->form_validation->set_rules('isi', 'Isi', 'required',
+   			array(
+		       'required'      => 'Isi Kosong, silahkan isi terlebih dahulu'
+		 	));
+
+		 if ($this->form_validation->run() === FALSE)
+	    {
+	       	$this->load->view("templates/header");
+			$this->load->view("templates/header_form");
+			$this->load->view('kategori/form_add');
+			$this->load->view("templates/footer_form");
+			$this->load->view("templates/footer");	
+
+	    } else {
+
+	        $namaKategori 	= $_POST['namaKategori'];
+			$keterangan		= $_POST['keterangan'];
+			$tanggalBuat 	= date("Y-m-d H:i:s");
+			
+			$data_insert	= array(
+									'namaKategori' 	=> $namaKategori,
+									'keterangan'	=> $keterangan,
+									'tanggalBuat'	=> $tanggalBuat
+								);
+			
+			$this->load->model('kategoriModel');
+			$res = $this->kategoriModel->InsertData('kategori', $data_insert);
+			
+			if($res>=1){
+				$this->session->set_flashdata('pesan','Tambah Data Sukses');
+				redirect('kategori/preview');
+			}else{
+				echo "<h2>Insert Data Gagal</h2>";	
+			}
 		}
 	}
 
@@ -83,6 +113,14 @@ class Kategori extends CI_Controller {
 		$data['result'] = $this->kategoriModel->GetPreview($id);
 		$this->load->view("templates/header");
 		$this->load->view('kategori/preview', $data);
+		$this->load->view("templates/footer");
+	}
+
+	public function datatable(){
+
+		$data['result'] = $this->kategoriModel->GetAll();
+		$this->load->view("templates/header");
+		$this->load->view('kategori/datatables', $data);
 		$this->load->view("templates/footer");
 	}
 }

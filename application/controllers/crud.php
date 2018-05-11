@@ -2,26 +2,64 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Crud extends CI_Controller {
-	
-	public function index(){
-		$this->load->model('mymodel');
+	function __construct()
+	{
+		parent::__construct();
 
+		$this->load->model('mymodel');
+		$this->load->model('kategoriModel');
+
+	}
+
+	public function index(){
 		$data['result'] = $this->mymodel->GetArtikel();
 
-		$this->load->view('home', $data);
-		//$this->load->template('body');
+		$limit_per_page = 4;
+
+		// URI segment untuk mendeteksi "halaman ke berapa" dari URL
+		$start_index = ( $this->uri->segment(3) ) ? $this->uri->segment(3) : 0;
+
+		// Dapatkan jumlah data 
+		$total_records = $this->mymodel->get_total();
+		
+		if ($total_records > 0) {
+			// Dapatkan data pada halaman yg dituju
+			$data['result'] = $this->mymodel->GetArtikel($limit_per_page, $start_index);
+			
+			// Konfigurasi pagination
+			$config['base_url'] = base_url() . 'crud/index';
+			$config['total_rows'] = $total_records;
+			$config['per_page'] = $limit_per_page;
+			$config["uri_segment"] = 3;
+			
+			$this->pagination->initialize($config);
+				
+			// Buat link pagination
+			$data["links"] = $this->pagination->create_links();
+		}
+
+		$this->load->view("templates/header");
+		$this->load->view('artikel/home', $data);
+		$this->load->view("templates/footer");
 	} 
 
 	public function do_preview($id=''){
 		$this->load->model('mymodel');
 
 		$data['isi'] = $this->mymodel->GetPreview($id);
-		
-		$this->load->view('preview', $data);
+		$this->load->view("templates/header");
+		$this->load->view('artikel/preview', $data);
+		$this->load->view("templates/footer");
 	}
 
 	public function add_data(){
-		$this->load->view('form_add');
+		$this->load->model('kategoriModel');
+		$kategori = $this->kategoriModel->getKategori();
+		$data['kat'] = $kategori->result();
+
+		$this->load->view("templates/header_form");
+		$this->load->view('artikel/form_add',$data);
+		$this->load->view("templates/footer_form");
 	}
 
 	public function do_insert(){
@@ -47,7 +85,9 @@ class Crud extends CI_Controller {
 
 		 if ($this->form_validation->run() === FALSE)
 	    {
-	        $this->load->view('form_add');
+	       	$this->load->view("templates/header_form");
+			$this->load->view('artikel/form_add');
+			$this->load->view("templates/footer_form");
 
 	    } else {
 
@@ -70,6 +110,7 @@ class Crud extends CI_Controller {
 	            $data = array('upload_data' => $this->upload->data());
 
 	            $judul 			= $_POST['judul'];
+	            $kategori 		=$_POST['kategori'];
 				$tgl			= date("Y-m-d H:i:s");
 				$author 		= $_POST['author'];
 				$isi			= $_POST['isi'];
@@ -77,6 +118,7 @@ class Crud extends CI_Controller {
 				
 				$data_insert	= array(
 										'judul' 	=> $judul,
+										'idKategori'=> $kategori,
 										'tgl'		=> $tgl,
 										'author'	=> $author,
 										'isi' 		=> $isi,
@@ -107,7 +149,9 @@ class Crud extends CI_Controller {
 			"isi" 		=> $artikel[0]['isi'],
 			"img"		=> $artikel[0]['img']
 		);
-		$this->load->view('form_edit',$data);
+		$this->load->view("templates/header");
+		$this->load->view('artikel/form_edit',$data);
+		$this->load->view("templates/footer");
 	}
 
 	public function do_update(){
@@ -132,7 +176,7 @@ class Crud extends CI_Controller {
 
 		 if ($this->form_validation->run() === FALSE)
 	    {
-	        $this->load->view('form_add');
+	        $this->load->view('form_edit');
 
 	    } else {
 

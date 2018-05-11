@@ -51,6 +51,7 @@
 				<ul>
 					<li><a href="<?php echo base_url()."kategori/preview/"; ?>">Lihat Kategori</a></li>	
 					<li><a href="<?php echo base_url()."kategori/add_data/"; ?>">Tambah Kategori</a></li>	
+					<li><a href="<?php echo base_url()."kategori/datatable/"; ?>">Data Tables</a></li>	
 				</ul>
 			</div>
 			<div class="fh5co-box">
