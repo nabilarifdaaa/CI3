@@ -38,6 +38,14 @@
 				<li><a href="#"><i class="icon-facebook"></i></a></li>
 				<li><a href="#"><i class="icon-instagram"></i></a></li>
 			</ul>
+			<div class="fh5co-box">
+				<h3 class="heading">Search</h3>
+				<form action="#">
+					<div class="form-group">
+						<input type="text" class="form-control" placeholder="Type a keyword">
+					</div>
+				</form>
+			</div>
 		</div>
 
 		<div class="fh5co-menu">
@@ -53,14 +61,12 @@
 					<li><a href="<?php echo base_url()."kategori/add_data/"; ?>">Tambah Kategori</a></li>	
 					<li><a href="<?php echo base_url()."kategori/datatable/"; ?>">Data Tables</a></li>	
 				</ul>
-			</div>
-			<div class="fh5co-box">
-				<h3 class="heading">Search</h3>
-				<form action="#">
-					<div class="form-group">
-						<input type="text" class="form-control" placeholder="Type a keyword">
-					</div>
-				</form>
+				<h3 class="heading">User</h3>
+				<ul>
+					<li><a href="<?php echo base_url()."User/tambahuser/"; ?>">Register</a></li>	
+					<li><a href="<?php echo base_url()."User/loginuser/"; ?>">Login</a></li>		
+					<li><a href="<?php echo base_url()."User/logout/"; ?>">Logout</a></li>	
+				</ul>
 			</div>
 		</div>
 	</div>
@@ -85,3 +91,14 @@
 		</div>
 
 	</header>
+	<?php if($this->session->flashdata('user_registered')): ?>
+         <?php echo '<div class="alert alert-success" role="alert">'.$this->session->flashdata('user_registered').'</div>'; ?>
+       <?php endif; ?>
+
+       <?php if($this->session->flashdata('login_failed')): ?>
+         <?php echo '<p class="alert alert-danger">'.$this->session->flashdata('login_failed').'</p>'; ?>
+       <?php endif; ?>
+
+        <?php if($this->session->flashdata('user_loggedout')): ?>
+         <?php echo '<p class="alert alert-success">'.$this->session->flashdata('user_loggedout').'</p>'; ?>
+       <?php endif; ?>
