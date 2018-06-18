@@ -34,7 +34,7 @@ Class User extends CI_Controller{
          if($this->form_validation->run() === FALSE){
             $this->load->view('templates/header');
             $this->load->view('templates/header_form');
-            $this->load->view('user/register', $data);
+            $this->load->view('user/register');
             $this->load->view('templates/footer');
             $this->load->view('templates/footer_form');
         } else {
@@ -68,10 +68,12 @@ Class User extends CI_Controller{
 		        $user_data = array(
 		            'user_id' => $user_id,
 		            'username' => $username,
-		            'logged_in' =>true);
+		            'logged_in' =>true,
+		        	'level' =>$this->user_model->get_user_level($user_id));
 			    $this->session->set_userdata($user_data);
-		        $this->session->set_flashdata('user_loggedin', 'You are now logged in');
-		        redirect('crud');
+		        $this->session->set_flashdata('user_loggedin', 'You are now logged in'.$username);
+		        //redirect('crud');
+		        redirect('user/dashboard');
 	    	} else {
 		        $this->session->set_flashdata('login_failed', 'Login is invalid');
 		        redirect('user/login');
@@ -89,6 +91,19 @@ Class User extends CI_Controller{
         $this->session->set_flashdata('user_loggedout', 'Anda sudah log out');
 
         redirect('user/loginuser');
+    }
+
+    public function dashboard(){
+
+        if(!$this->session->userdata('logged_in')){
+            redirect('user/login');
+        }
+
+        $username = $this->session->userdata('username');
+        $data['user'] = $this->user_model->get_user_details( $username );
+        $this->load->view('templates/header');
+        $this->load->view('user/dashboard', $data);
+        $this->load->view('templates/footer');
     }
 
 }

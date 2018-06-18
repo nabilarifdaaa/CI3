@@ -16,6 +16,20 @@
               <?php echo validation_errors(); ?>
                <?php echo form_open('User/register', array('class' => 'needs-validation','novalidate' => ''));?>
               <form class="needs-validation" novalidate>
+                <div class="form-group">
+                    <label for="">Pilih Paket Membership</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="membership" 
+                id="goldmember" value="2" checked>
+                        <label class="form-check-label" for="goldmember">Gold</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="membership" 
+                id="silvermember" value="3">
+                        <label class="form-check-label" for="silvermember">Silver</label>
+                    </div>
+                </div>
+                                
                 <div class="form-row">
                   <div class="col-md-4 mb-3">
                     <label for="validationCustom01">Nama Lengkap</label>
