@@ -69,7 +69,7 @@ Class User extends CI_Controller{
 		            'user_id' => $user_id,
 		            'username' => $username,
 		            'logged_in' =>true,
-		        	'level' =>$this->user_model->get_user_level($user_id));
+		        	'level' =>$this->userModel->get_user_level($user_id));
 			    $this->session->set_userdata($user_data);
 		        $this->session->set_flashdata('user_loggedin', 'You are now logged in'.$username);
 		        //redirect('crud');
@@ -100,7 +100,7 @@ Class User extends CI_Controller{
         }
 
         $username = $this->session->userdata('username');
-        $data['user'] = $this->user_model->get_user_details( $username );
+        $data['user'] = $this->userModel->get_user_details( $username );
         $this->load->view('templates/header');
         $this->load->view('user/dashboard', $data);
         $this->load->view('templates/footer');
